@@ -887,89 +887,84 @@ function generateInvoicePdf(id, authToken, signatureDataUrl) {
       sigUrl = inv.signatureDataUrl;
     }
 
- // Blok HTML tanda tangan creator — ukuran diperbesar agar standar dan jelas di PDF
-var creatorSignHtml = sigUrl
-  ? '<img src="' + sigUrl + '" alt="Tanda Tangan" style="max-width:500px;max-height:290px;width:auto;height:auto;display:block;margin:0 auto 4px;object-fit:contain">'
-  : '<div style="height:290px"></div>';
+    // Blok HTML tanda tangan creator — ukuran diperbesar agar standar dan jelas di PDF
+    var creatorSignHtml = sigUrl
+      ? '<img src="' + sigUrl + '" alt="Tanda Tangan" style="max-width:500px;max-height:290px;width:auto;height:auto;display:block;margin:0 auto 4px;object-fit:contain">'
+      : '<div style="height:290px"></div>';
 
-var htmlContent = '<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8">' +
-  '<title>Invoice ' + inv.invoiceNumber + '</title>' +
-  '<style>' +
-    'body{margin:0;padding:0;font-family:Arial,sans-serif;font-size:13px;color:#222}' +
-    '.page{max-width:740px;margin:0 auto;padding:40px 44px}' +
-    /* Border & aksen utama menggunakan Biru BCA (#00529C) */
-    '.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:20px;border-bottom:3px solid #00529C}' +
-    '.brand-col h1{margin:0 0 4px;font-size:24px;color:#00529C;letter-spacing:.02em}' +
-    '.brand-col p{margin:2px 0;font-size:11px;color:#666}' +
-    '.inv-meta{text-align:right}' +
-    '.inv-meta .inv-num{font-size:18px;font-weight:700;color:#00529C;margin-bottom:4px}' +
-    '.inv-meta p{margin:2px 0;font-size:11px;color:#666}' +
-    '.section-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#00529C;margin:22px 0 8px}' +
-    /* Background info box disesuaikan dengan tone biru soft (#F0F4F9) */
-    '.info-box{background:#F0F4F9;border:1px solid #C8D8EC;border-radius:8px;padding:14px 18px}' +
-    '.info-row{display:flex;gap:8px;margin-bottom:6px;font-size:13px}' +
-    '.info-row:last-child{margin-bottom:0}' +
-    '.info-label{flex:0 0 150px;color:#666;font-size:12px}' +
-    '.info-value{flex:1;font-weight:600;color:#222}' +
-    /* Box paket utama dengan warna Biru BCA (#00529C) */
-    '.paket-box{background:#00529C;color:#fff;border-radius:8px;padding:16px 18px;margin:12px 0}' +
-    '.paket-box .paket-name{font-size:16px;font-weight:700;margin-bottom:4px}' +
-    /* Box syarat & ketentuan */
-    '.syarat-box{background:#F9FBFC;border:1px solid #E1EBF5;border-radius:8px;padding:14px 18px;line-height:1.7;font-size:12px;color:#444}' +
-    /* Box transfer disesuaikan ke nuansa soft blue (#E6F0FA) */
-    '.transfer-box{display:flex;align-items:center;gap:16px;background:#E6F0FA;border:1px solid #B8D3F0;border-radius:8px;padding:14px 18px}' +
-    '.transfer-icon{font-size:28px}' +
-    '.transfer-label{font-size:10px;color:#666;font-weight:800;text-transform:uppercase;letter-spacing:.08em}' +
-    '.transfer-value{font-size:15px;font-weight:700;color:#003B70;letter-spacing:.04em}' +
-    '.footer{margin-top:40px;padding-top:16px;border-top:1px solid #C8D8EC;display:flex;justify-content:space-between;font-size:11px;color:#888}' +
-    '.sign-area{margin-top:48px;display:flex;justify-content:space-between;gap:24px}' +
-    '.sign-block{text-align:center;flex:0 0 200px}' +
-    '.sign-block .sign-img-wrap{min-height:290px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:0}' +
-    '.sign-block .sign-line{width:180px;border-top:1px solid #aaa;margin:6px auto 6px}' +
-    '.sign-block .sign-label{font-size:11px;color:#666}' +
-    '@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}' +
-  '</style></head><body><div class="page">' +
-    '<div class="header">' +
-      '<div class="brand-col"><h1>' + creatorName + '</h1>' +
-        '<p>Creator Portfolio &amp; Media Kit</p>' +
-        (creatorLocation ? '<p>' + creatorLocation + '</p>' : '') +
-        (creatorEmail ? '<p>' + creatorEmail + '</p>' : '') +
-      '</div>' +
-      '<div class="inv-meta">' +
-        '<div class="inv-num">' + inv.invoiceNumber + '</div>' +
-        '<p>Tanggal Dibuat: ' + createdFormatted + '</p>' +
-      '</div>' +
-    '</div>' +
-    '<div class="section-title">Data Pelanggan</div>' +
-    '<div class="info-box">' +
-      '<div class="info-row"><span class="info-label">Nama Pelanggan</span><span class="info-value">' + (inv.namaPelanggan || '-') + '</span></div>' +
-      '<div class="info-row"><span class="info-label">Tanggal Kerja Sama</span><span class="info-value">' + tanggalFormatted + '</span></div>' +
-    '</div>' +
-    '<div class="section-title">Paket Rate Card</div>' +
-    '<div class="paket-box">' +
-      '<div class="paket-name">' + (inv.paketRateCard || '-') + '</div>' +
-    '</div>' +
-    '<div class="section-title">Nomor Tujuan Transfer</div>' +
-    '<div class="transfer-box">' +
-      '<div class="transfer-icon">🏦</div>' +
-      '<div><div class="transfer-label">Transfer ke</div><div class="transfer-value">' + (inv.nomorTransfer || '-') + '</div></div>' +
-    '</div>' +
-    '<div class="section-title">Syarat &amp; Ketentuan</div>' +
-    '<div class="syarat-box">' + (syarat || 'Tidak ada syarat &amp; ketentuan.') + '</div>' +
-    '<div class="sign-area">' +
-      '<div class="sign-block">' +
-        '<div class="sign-img-wrap"><div style="height:70px"></div></div>' +
-        '<div class="sign-line"></div>' +
-        '<div class="sign-label">Pelanggan<br>' + (inv.namaPelanggan || '') + '</div>' +
-      '</div>' +
-      '<div class="sign-block">' +
-        '<div class="sign-img-wrap">' + creatorSignHtml + '</div>' +
-        '<div class="sign-line"></div>' +
-        '<div class="sign-label">Creator<br>' + creatorName + '</div>' +
-      '</div>' +
-    '</div>' +
-    '<div class="footer"><span>' + inv.invoiceNumber + ' · Digenerate otomatis</span><span>' + creatorName + ' &copy; 2026</span></div>' +
-  '</div></body></html>';
+    var htmlContent = '<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8">' +
+      '<title>Invoice ' + inv.invoiceNumber + '</title>' +
+      '<style>' +
+        'body{margin:0;padding:0;font-family:Arial,sans-serif;font-size:13px;color:#222}' +
+        '.page{max-width:740px;margin:0 auto;padding:40px 44px}' +
+        '.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:20px;border-bottom:3px solid #4a6741}' +
+        '.brand-col h1{margin:0 0 4px;font-size:24px;color:#4a6741;letter-spacing:.02em}' +
+        '.brand-col p{margin:2px 0;font-size:11px;color:#666}' +
+        '.inv-meta{text-align:right}' +
+        '.inv-meta .inv-num{font-size:18px;font-weight:700;color:#4a6741;margin-bottom:4px}' +
+        '.inv-meta p{margin:2px 0;font-size:11px;color:#666}' +
+        '.section-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#4a6741;margin:22px 0 8px}' +
+        '.info-box{background:#f7f9f5;border:1px solid #dde8d9;border-radius:8px;padding:14px 18px}' +
+        '.info-row{display:flex;gap:8px;margin-bottom:6px;font-size:13px}' +
+        '.info-row:last-child{margin-bottom:0}' +
+        '.info-label{flex:0 0 150px;color:#666;font-size:12px}' +
+        '.info-value{flex:1;font-weight:600;color:#222}' +
+        '.paket-box{background:#4a6741;color:#fff;border-radius:8px;padding:16px 18px;margin:12px 0}' +
+        '.paket-box .paket-name{font-size:16px;font-weight:700;margin-bottom:4px}' +
+        '.syarat-box{background:#fffdf5;border:1px solid #e8e0c8;border-radius:8px;padding:14px 18px;line-height:1.7;font-size:12px;color:#444}' +
+        '.transfer-box{display:flex;align-items:center;gap:16px;background:#f0f6ff;border:1px solid #c8d8f0;border-radius:8px;padding:14px 18px}' +
+        '.transfer-icon{font-size:28px}' +
+        '.transfer-label{font-size:10px;color:#666;font-weight:800;text-transform:uppercase;letter-spacing:.08em}' +
+        '.transfer-value{font-size:15px;font-weight:700;color:#1a4080;letter-spacing:.04em}' +
+        '.footer{margin-top:40px;padding-top:16px;border-top:1px solid #dde8d9;display:flex;justify-content:space-between;font-size:11px;color:#888}' +
+        '.sign-area{margin-top:48px;display:flex;justify-content:space-between;gap:24px}' +
+        '.sign-block{text-align:center;flex:0 0 200px}' +
+        '.sign-block .sign-img-wrap{min-height:290px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:0}' +
+        '.sign-block .sign-line{width:180px;border-top:1px solid #aaa;margin:6px auto 6px}' +
+        '.sign-block .sign-label{font-size:11px;color:#666}' +
+        '@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}' +
+      '</style></head><body><div class="page">' +
+        '<div class="header">' +
+          '<div class="brand-col"><h1>' + creatorName + '</h1>' +
+            '<p>Creator Portfolio &amp; Media Kit</p>' +
+            (creatorLocation ? '<p>' + creatorLocation + '</p>' : '') +
+            (creatorEmail ? '<p>' + creatorEmail + '</p>' : '') +
+          '</div>' +
+          '<div class="inv-meta">' +
+            '<div class="inv-num">' + inv.invoiceNumber + '</div>' +
+            '<p>Tanggal Dibuat: ' + createdFormatted + '</p>' +
+          '</div>' +
+        '</div>' +
+        '<div class="section-title">Data Pelanggan</div>' +
+        '<div class="info-box">' +
+          '<div class="info-row"><span class="info-label">Nama Pelanggan</span><span class="info-value">' + (inv.namaPelanggan || '-') + '</span></div>' +
+          '<div class="info-row"><span class="info-label">Tanggal Kerja Sama</span><span class="info-value">' + tanggalFormatted + '</span></div>' +
+        '</div>' +
+        '<div class="section-title">Paket Rate Card</div>' +
+        '<div class="paket-box">' +
+          '<div class="paket-name">' + (inv.paketRateCard || '-') + '</div>' +
+        '</div>' +
+        '<div class="section-title">Nomor Tujuan Transfer</div>' +
+        '<div class="transfer-box">' +
+          '<div class="transfer-icon">🏦</div>' +
+          '<div><div class="transfer-label">Transfer ke</div><div class="transfer-value">' + (inv.nomorTransfer || '-') + '</div></div>' +
+        '</div>' +
+        '<div class="section-title">Syarat &amp; Ketentuan</div>' +
+        '<div class="syarat-box">' + (syarat || 'Tidak ada syarat &amp; ketentuan.') + '</div>' +
+        '<div class="sign-area">' +
+          '<div class="sign-block">' +
+            '<div class="sign-img-wrap"><div style="height:70px"></div></div>' +
+            '<div class="sign-line"></div>' +
+            '<div class="sign-label">Pelanggan<br>' + (inv.namaPelanggan || '') + '</div>' +
+          '</div>' +
+          '<div class="sign-block">' +
+            '<div class="sign-img-wrap">' + creatorSignHtml + '</div>' +
+            '<div class="sign-line"></div>' +
+            '<div class="sign-label">Creator<br>' + creatorName + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="footer"><span>' + inv.invoiceNumber + ' · Digenerate otomatis</span><span>' + creatorName + ' &copy; 2025</span></div>' +
+      '</div></body></html>';
 
     return { success: true, html: htmlContent, invoiceNumber: inv.invoiceNumber };
   } catch (e) {
