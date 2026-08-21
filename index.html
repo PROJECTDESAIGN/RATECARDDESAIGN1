@@ -3,18 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Portofolio creator & rate card kolaborasi brand.">
-  <title>Creator Portfolio & Rate Card</title>
+  <meta name="description" content="Tema hangat dengan gradasi oranye-merah muda, cocok untuk lifestyle & beauty.">
+  <title>Creator Portfolio & Rate Card — Coral Sunset</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
   <!-- ── Favicon & PWA ──
        Favicon berupa SVG inline (data URI) agar tidak bergantung file logotoko.png.
        Untuk Google Apps Script : favicon tidak bisa di-serve dari GAS, tag ini diabaikan browser
        tapi tidak menimbulkan error.
   -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%234a6741' rx='20'/%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' font-size='55' fill='%23fff'%3E✦%3C/text%3E%3C/svg%3E">
-  <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%234a6741' rx='20'/%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' font-size='55' fill='%23fff'%3E✦%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23e66a55' rx='20'/%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' font-size='55' fill='%23fff'%3E✺%3C/text%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23e66a55' rx='20'/%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' font-size='55' fill='%23fff'%3E✺%3C/text%3E%3C/svg%3E">
   <link rel="manifest" href="./manifest.json">
-  <meta name="theme-color" content="#4a6741">
+  <meta name="theme-color" content="#e66a55">
   <meta name="mobile-web-app-capable"                content="yes">
   <meta name="apple-mobile-web-app-capable"          content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -24,18 +25,18 @@
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <style>
     :root {
-      --cream:#f5f0e8; --cream-2:#ede8de; --sage:#4a6741;
-      --sage-dark:#385332; --sage-light:#7a9b71; --ink:#2c2c2c;
-      --muted:#686868; --light:#929292; --border:#d8d0c4; --white:#fff;
+      --cream:linear-gradient(120deg, #fff0f0 0%, #ffe4d1 50%, #ffd6c2 100%); --cream-2:#ffe4d1; --sage:#e66a55;
+      --sage-dark:#c75340; --sage-light:#ff9f8a; --ink:#3d2c2c;
+      --muted:#8d6e63; --light:#a1887f; --border:#f0c4b8; --white:#ffffff;
     }
     * { box-sizing:border-box; }
     html { scroll-behavior:smooth; }
-    body { margin:0; background:var(--cream); color:var(--ink); font-family:Inter,Arial,sans-serif; }
+    body { margin:0; background:var(--cream); color:var(--ink); font-family:Poppins, Arial, sans-serif; }
     button,input,select,textarea { font:inherit; }
     button,a { -webkit-tap-highlight-color:transparent; }
     button { cursor:pointer; }
     a { color:inherit; }
-    .serif { font-family:Georgia,'Times New Roman',serif; }
+    .serif { font-family:'Libre Baskerville', Georgia, serif; }
     .container { width:min(1100px,calc(100% - 48px)); margin:auto; }
     .top-nav { position:sticky; top:0; z-index:20; background:#fff; border-bottom:1px solid var(--border); }
     .nav-inner { min-height:64px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
@@ -58,8 +59,8 @@
     section { padding:72px 0; }
     .hero { padding:78px 0; }
     .hero-grid { display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center; }
-    .arch { width:min(350px,100%); margin:auto; overflow:hidden; border:2px solid var(--sage-light); border-radius:190px 190px 0 0; }
-    .arch img { display:block; width:100%; height:450px; object-fit:cover; }
+    .arch { width:min(350px,100%); margin:auto; overflow:hidden; border:2px solid var(--sage-light); border-radius:0 0 190px 190px; }
+    .arch img { display:block; width:100%; height:460px; object-fit:cover; }
     .eyebrow { margin:0 0 10px; color:var(--sage); font-size:12px; font-weight:800; letter-spacing:.18em; text-transform:uppercase; }
     h1,h2,h3,p { margin-top:0; }
     h1 { margin-bottom:12px; font-size:clamp(42px,6vw,70px); line-height:1.03; }
@@ -95,7 +96,7 @@
         heroFloat   4s ease-in-out infinite;
     }
 
-    /* ══ Animasi "Tertarik kolaborasi?" — wave per huruf ══ */
+    /* ══ Animasi "Tertarik untuk berkolaborasi?" — wave per huruf ══ */
     @keyframes waveChar {
       0%,60%,100% { transform: translateY(0); }
       30%          { transform: translateY(-10px); }
@@ -287,6 +288,16 @@
       .form-grid,.editor-grid { grid-template-columns:1fr; }
       section { padding:58px 0; }
     }
+
+    body { background-image: radial-gradient(circle at 80% 10%, rgba(255,159,138,0.2) 0%, transparent 35%); }
+@keyframes sunsetGlow { 0%,100% { box-shadow: 0 0 0 rgba(230,106,85,0); } 50% { box-shadow: 0 8px 32px rgba(230,106,85,0.25); } }
+        @keyframes heroFloat { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-7px); } }
+        #hero-name { background: linear-gradient(90deg, #e66a55, #ff9f8a, #e66a55); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: heroShimmer 3.5s linear infinite, heroFloat 4.5s ease-in-out infinite; }
+        .arch { animation: sunsetGlow 3s ease-in-out infinite; }
+        body { background: var(--cream); background-image: var(--pattern); }
+        .section-title h2 { color: #e66a55; }
+        .tagline { color: #c75340; }
+
   </style>
 </head>
 <body>
@@ -360,14 +371,14 @@
     <section id="contact" class="soft-section">
       <div class="container">
         <div class="contact-card">
-          <div class="contact-main"><img id="contact-avatar" class="contact-avatar" alt="Creator"><div><h2 id="collab-title">Tertarik<br>kolaborasi?</h2><p>Yuk, hubungi admin sekarang!</p><div class="button-row"><button class="pill-btn" type="button" data-action="inquiry"><i data-lucide="send"></i> Kirim Pertanyaan</button><button class="pill-btn" type="button" data-action="whatsapp"><i data-lucide="message-circle"></i> Chat via WhatsApp</button></div></div></div>
+          <div class="contact-main"><img id="contact-avatar" class="contact-avatar" alt="Creator"><div><h2 id="collab-title">Tertarik untuk<br>berkolaborasi?</h2><p>Yuk, hubungi admin sekarang!</p><div class="button-row"><button class="pill-btn" type="button" data-action="inquiry"><i data-lucide="send"></i> Kirim Pertanyaan</button><button class="pill-btn" type="button" data-action="whatsapp"><i data-lucide="message-circle"></i> Chat via WhatsApp</button></div></div></div>
           <div id="contact-info-cards" class="contact-info"></div>
         </div>
       </div>
     </section>
   </main>
 
-  <footer><div id="footer-name" class="footer-name">Creator</div><small>MEDIA KIT</small><p class="serif">Thank you! Let's create something amazing together ✨</p><small>© 2025 · Hak Cipta Dilindungi</small></footer>
+  <footer><div id="footer-name" class="footer-name">Creator</div><small>MEDIA KIT</small><p class="serif">Thank you! Let's create something amazing together ✨</p><small>© dwisyafitri · 088289369002</small></footer>
 
   <div id="video-modal" class="modal" data-close-modal="video"><div class="modal-box small"><div class="modal-head"><h3>Video Portfolio</h3><button class="close" type="button" data-action="close-video"><i data-lucide="x"></i></button></div><div id="modal-video-container" style="padding:0;background:#000"></div></div></div>
 
@@ -1396,7 +1407,7 @@
         ? '<img src="' + sigUrl + '" alt="Tanda Tangan" style="max-width:500px;max-height:290px;width:auto;height:auto;display:block;margin:0 auto 4px;object-fit:contain">'
         : '<div style="height:290px"></div>';
       return '<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8">' +
-        '<title>Invoice ' + escHtml(inv.invoiceNumber || '') + '</title>' +
+        '<title>Creator Portfolio & Rate Card — Coral Sunset</title>' +
         '<style>' +
           'body{margin:0;padding:0;font-family:Arial,sans-serif;font-size:13px;color:#222}' +
           '.page{max-width:740px;margin:0 auto;padding:40px 44px}' +
@@ -1657,7 +1668,7 @@
     });
 
     /* ══════════════════════════════════════════════════════
-       ANIMASI: wave huruf pada h2 "Tertarik kolaborasi?"
+       ANIMASI: wave huruf pada h2 "Tertarik untuk berkolaborasi?"
     ══════════════════════════════════════════════════════ */
     (function(){
       function wrapWave(el){
@@ -1701,26 +1712,163 @@
       }
     })();
 
-    window.addEventListener('load', function(){
-      if (isAppsScript()) {
-        /* 1. Tampilkan cache langsung tanpa loading */
-        var cached = cacheRead();
-        if (cached) render(cached);
+window.addEventListener('load', function () {
 
-        /* 2. Fetch server di background untuk data terbaru */
-        server('getData', [], function(fresh) {
-          render(fresh);
-          cacheWrite(fresh);
-        }, function() {
-          /* Server gagal: jika belum ada cache, gunakan defaults */
-          if (!cached) render(defaults());
-          toast('Data server gagal dimuat. Menampilkan data tersimpan.', 'error');
-        });
+  /* =====================================================
+     LOAD DATA WEBSITE
+     ===================================================== */
+
+  /* Jika dibuka langsung dari Google Apps Script */
+  if (isAppsScript()) {
+
+    /* Tampilkan cache terlebih dahulu agar tidak blank */
+    var cached = cacheRead();
+
+    if (cached) {
+      appData = normalize(cached);
+      render(appData);
+    }
+
+    /* Ambil data terbaru dari Google Apps Script */
+    server('getData', [], function (fresh) {
+
+      if (fresh && typeof fresh === 'object') {
+        appData = normalize(fresh);
+        render(appData);
+        cacheWrite(appData);
       } else {
-        var cached = cacheRead();
-        render(cached || defaults());
+
+        /* Jika server mengembalikan data kosong */
+        if (!cached) {
+          appData = normalize(defaults());
+          render(appData);
+        }
+
+        toast('Data Google Apps Script kosong.', 'error');
       }
+
+    }, function (err) {
+
+      console.error('Gagal mengambil data GAS:', err);
+
+      /* Kalau server gagal, gunakan cache */
+      if (cached) {
+        appData = normalize(cached);
+        render(appData);
+      } else {
+        appData = normalize(defaults());
+        render(appData);
+      }
+
+      toast(
+        'Data Google Apps Script gagal dimuat. Data tersimpan digunakan.',
+        'error'
+      );
     });
+
+  }
+
+  /* =====================================================
+     NETLIFY / GITHUB / HOSTING
+     ===================================================== */
+  else {
+
+    /*
+     * JANGAN langsung menggunakan defaults().
+     * Data harus diambil dari Google Apps Script API.
+     */
+
+    var cached = cacheRead();
+
+    /* Tampilkan cache terlebih dahulu */
+    if (cached) {
+      appData = normalize(cached);
+      render(appData);
+    }
+
+    /*
+     * URL Web App Google Apps Script
+     *
+     * GANTI URL DI BAWAH DENGAN URL DEPLOYMENT GAS KAMU
+     */
+    var GAS_API_URL = 'URL_WEB_APP_GOOGLE_APPS_SCRIPT_KAMU';
+
+    fetch(GAS_API_URL + '?action=getData', {
+      method: 'GET',
+      cache: 'no-store'
+    })
+
+    .then(function(response) {
+
+      if (!response.ok) {
+        throw new Error(
+          'HTTP ' + response.status + ' - ' + response.statusText
+        );
+      }
+
+      return response.json();
+
+    })
+
+    .then(function(fresh) {
+
+      console.log('Data GAS berhasil diterima:', fresh);
+
+      if (fresh && typeof fresh === 'object') {
+
+        appData = normalize(fresh);
+
+        render(appData);
+
+        cacheWrite(appData);
+
+      } else {
+
+        throw new Error('Data GAS kosong atau format tidak valid.');
+
+      }
+
+    })
+
+    .catch(function(err) {
+
+      console.error('Gagal mengambil data Google Apps Script:', err);
+
+      /*
+       * Kalau ada cache, tetap gunakan cache.
+       * Jangan langsung menggunakan defaults()
+       * karena defaults() berisi data bawaan HTML.
+       */
+      if (cached) {
+
+        appData = normalize(cached);
+        render(appData);
+
+        toast(
+          'Server tidak dapat dihubungi. Data terakhir digunakan.',
+          'error'
+        );
+
+      } else {
+
+        /*
+         * Hanya sebagai fallback jika benar-benar
+         * belum pernah ada data.
+         */
+        appData = normalize(defaults());
+        render(appData);
+
+        toast(
+          'Data Google Apps Script belum dapat dimuat.',
+          'error'
+        );
+      }
+
+    });
+
+  }
+
+});
   </script>
 </body>
 </html>
