@@ -151,6 +151,10 @@ function doPost(e) {
       var pdfSig = payload.signatureDataUrl || args[2] || '';
       return apiResponse_(generateInvoicePdf(pdfId, pdfTok, pdfSig), cb);
     }
+    if (action === 'detectVideo') {
+      var vidUrl = payload.url || args[0] || '';
+      return apiResponse_(detectVideoUrl(vidUrl), cb);
+    }
     if (action === 'resetData') {
       return apiResponse_(resetData(), cb);
     }
@@ -250,28 +254,23 @@ function cloneObject_(value) {
 }
 
 function normalizeContactInfo_(items) {
-  var source = Array.isArray(items) ? items : [];
-  var result = source.map(function(item) {
-    if (!item || typeof item !== 'object') return {};
-    // Pastikan setiap item memiliki field yang dibutuhkan tanpa menimpa data user.
-    if (item.icon === undefined) item.icon = 'info';
-    if (item.label === undefined) item.label = 'LABEL';
-    if (item.value === undefined) item.value = '';
-    if (item.href === undefined) item.href = '';
-    return item;
-  });
-
-  // Jika benar-benar kosong, isi dengan contoh default agar UI tidak rusak.
-  if (result.length === 0) {
-    result = [
+  if (items === null || items === undefined) {
+    return [
       { icon: 'youtube', label: 'YOUTUBE', value: '@safwasakilla', href: 'https://youtube.com/@safwasakilla' },
       { icon: 'twitter', label: 'TWITTER / X', value: '@safwasakilla', href: 'https://x.com/safwasakilla' },
       { icon: 'instagram', label: 'INSTAGRAM', value: '@safwasakilla', href: 'https://instagram.com/safwasakilla' },
       { icon: 'music', label: 'TIKTOK', value: '@safwasakilla', href: 'https://tiktok.com/@safwasakilla' }
     ];
   }
-
-  return result;
+  var source = Array.isArray(items) ? items : [];
+  return source.map(function(item) {
+    if (!item || typeof item !== 'object') return {};
+    if (item.icon === undefined) item.icon = 'info';
+    if (item.label === undefined) item.label = 'LABEL';
+    if (item.value === undefined) item.value = '';
+    if (item.href === undefined) item.href = '';
+    return item;
+  });
 }
 
 /* ================================================================
