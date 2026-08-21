@@ -42,12 +42,45 @@ var PROPERTY_CHUNK_SIZE = 2000;
 var PROPERTY_TOTAL_LIMIT = 450000; // di bawah batas total 500 KB
 
 function doGet(e) {
-  // Catatan: addMetaTag hanya mendukung 'keywords' dan 'description'.
-  // Meta viewport, theme-color, apple-* sudah ditulis langsung di Index.html.
-  var output = HtmlService.createTemplateFromFile('index')
+
+  // ==========================================
+  // API DATA UNTUK NETLIFY / GITHUB
+  // ==========================================
+  var action = e && e.parameter ? e.parameter.action : '';
+
+  if (action === 'getData') {
+
+    try {
+
+      // Ambil data yang sama dengan yang digunakan
+      // oleh Admin Panel Google Apps Script
+      var data = getData();
+
+      return ContentService
+        .createTextOutput(JSON.stringify(data))
+        .setMimeType(ContentService.MimeType.JSON);
+
+    } catch (err) {
+
+      return ContentService
+        .createTextOutput(JSON.stringify({
+          success: false,
+          error: String(err)
+        }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+  }
+
+
+  // ==========================================
+  // WEBSITE GOOGLE APPS SCRIPT
+  // ==========================================
+  var output = HtmlService
+    .createTemplateFromFile('index')
     .evaluate()
     .setTitle('Creator Portfolio & Rate Card')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+
   return output;
 }
 
@@ -697,7 +730,7 @@ function submitInquiry(formData) {
         ]]);
         sheet.getRange(1, 1, 1, 6)
           .setFontWeight('bold')
-          .setBackground('#4a6741')
+          .setBackground('#8b1528')
           .setFontColor('#ffffff');
         sheet.setFrozenRows(1);
       }
@@ -897,22 +930,22 @@ function generateInvoicePdf(id, authToken, signatureDataUrl) {
       '<style>' +
         'body{margin:0;padding:0;font-family:Arial,sans-serif;font-size:13px;color:#222}' +
         '.page{max-width:740px;margin:0 auto;padding:40px 44px}' +
-        '.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:20px;border-bottom:3px solid #4a6741}' +
-        '.brand-col h1{margin:0 0 4px;font-size:24px;color:#4a6741;letter-spacing:.02em}' +
+        '.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:20px;border-bottom:3px solid #8b1528}' +
+        '.brand-col h1{margin:0 0 4px;font-size:24px;color:#8b1528;letter-spacing:.02em}' +
         '.brand-col p{margin:2px 0;font-size:11px;color:#666}' +
         '.inv-meta{text-align:right}' +
-        '.inv-meta .inv-num{font-size:18px;font-weight:700;color:#4a6741;margin-bottom:4px}' +
+        '.inv-meta .inv-num{font-size:18px;font-weight:700;color:#8b1528;margin-bottom:4px}' +
         '.inv-meta p{margin:2px 0;font-size:11px;color:#666}' +
-        '.section-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#4a6741;margin:22px 0 8px}' +
-        '.info-box{background:#f7f9f5;border:1px solid #dde8d9;border-radius:8px;padding:14px 18px}' +
+        '.section-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#8b1528;margin:22px 0 8px}' +
+        '.info-box{background:#fcf5f5;border:1px solid #dde8d9;border-radius:8px;padding:14px 18px}' +
         '.info-row{display:flex;gap:8px;margin-bottom:6px;font-size:13px}' +
         '.info-row:last-child{margin-bottom:0}' +
         '.info-label{flex:0 0 150px;color:#666;font-size:12px}' +
         '.info-value{flex:1;font-weight:600;color:#222}' +
-        '.paket-box{background:#4a6741;color:#fff;border-radius:8px;padding:16px 18px;margin:12px 0}' +
+        '.paket-box{background:#8b1528;color:#fff;border-radius:8px;padding:16px 18px;margin:12px 0}' +
         '.paket-box .paket-name{font-size:16px;font-weight:700;margin-bottom:4px}' +
-        '.syarat-box{background:#fffdf5;border:1px solid #e8e0c8;border-radius:8px;padding:14px 18px;line-height:1.7;font-size:12px;color:#444}' +
-        '.transfer-box{display:flex;align-items:center;gap:16px;background:#f0f6ff;border:1px solid #c8d8f0;border-radius:8px;padding:14px 18px}' +
+        '.syarat-box{background:#fdf0f0;border:1px solid #e8e0c8;border-radius:8px;padding:14px 18px;line-height:1.7;font-size:12px;color:#444}' +
+        '.transfer-box{display:flex;align-items:center;gap:16px;background:#fdf0f0;border:1px solid #c8d8f0;border-radius:8px;padding:14px 18px}' +
         '.transfer-icon{font-size:28px}' +
         '.transfer-label{font-size:10px;color:#666;font-weight:800;text-transform:uppercase;letter-spacing:.08em}' +
         '.transfer-value{font-size:15px;font-weight:700;color:#1a4080;letter-spacing:.04em}' +
