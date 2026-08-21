@@ -502,32 +502,49 @@
     /* ── Admin Dashboard ── */
     .pin-screen { padding: 48px 30px; text-align: center; }
     .pin-screen input { max-width: 240px; margin: 12px auto 18px; text-align: center; font-size: 22px; letter-spacing: .3em; font-weight: 700; }
-    .admin-screen { display: none; flex-direction: column; min-height: 0; flex: 1; }
+    .admin-screen {
+      display: none;
+      flex-direction: column;
+      min-height: 0;
+      flex: 1 1 auto;
+      overflow: hidden;
+    }
 
     .tabs {
       display: flex;
-      gap: 4px;
+      gap: 6px;
       overflow-x: auto;
-      padding: 12px 20px 0;
-      border-bottom: 1px solid var(--border);
-      background: #fff;
-      scrollbar-width: none;
+      padding: 12px 18px;
+      border-bottom: 1.5px solid var(--border);
+      background: #ffffff;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
     }
-    .tabs::-webkit-scrollbar { display: none; }
+    .tabs::-webkit-scrollbar { height: 4px; }
+    .tabs::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
     .tab {
-      padding: 9px 15px;
-      border: 0;
-      background: transparent;
-      font-size: 11.5px;
-      font-weight: 800;
-      color: var(--light);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      background: var(--cream);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
       white-space: nowrap;
       cursor: pointer;
-      border-radius: 8px 8px 0 0;
+      border-radius: 10px;
       transition: all .2s;
+      flex-shrink: 0;
     }
-    .tab:hover { color: var(--sage); }
-    .tab.active { background: #C4EBF4; color: var(--sage); border-bottom: 2px solid var(--sage); }
+    .tab:hover { color: var(--sage); border-color: var(--sage); background: #fff; }
+    .tab.active { background: var(--sage); color: #ffffff; border-color: var(--sage); box-shadow: 0 2px 8px rgba(0, 144, 168, 0.25); }
+    .tab i { width: 14px; height: 14px; }
     .tab-pane { display: none; }
     .tab-pane.active { display: block; }
 
@@ -543,6 +560,16 @@
     .add-btn:hover { color: var(--sage-dark); text-decoration: underline; }
     .remove-btn { border: 0; background: none; font-size: 12px; font-weight: 800; color: var(--danger); display: inline-flex; align-items: center; gap: 4px; }
     .remove-btn:hover { text-decoration: underline; }
+
+    .admin-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border);
+      background: #fafafa;
+      flex-shrink: 0;
+      position: sticky;
+      bottom: 0;
+      z-index: 20;
+    }
 
     /* ── Signature & Invoices ── */
     .sig-section { border: 1px solid var(--border); border-radius: 12px; padding: 12px; background: #fff; }
@@ -828,15 +855,14 @@
       <!-- MAIN ADMIN SCREEN -->
       <div id="admin-screen" class="admin-screen">
         <div class="tabs">
-          <button class="tab active" data-tab="profile">Profil</button>
-          <button class="tab" data-tab="contact">Kontak</button>
-          <button class="tab" data-tab="social">Statistik</button>
-          <button class="tab" data-tab="audience">Audiens</button>
-          <button class="tab" data-tab="brands">Brand</button>
-          <button class="tab" data-tab="videos">Video</button>
-          <button class="tab" data-tab="rates">Rate Card</button>
-          <button class="tab" data-tab="invoices">Invoice</button>
-          <button class="tab" data-tab="gas-api">API GAS</button>
+          <button class="tab active" data-tab="profile"><i data-lucide="user"></i> Profil</button>
+          <button class="tab" data-tab="contact"><i data-lucide="phone"></i> Kontak</button>
+          <button class="tab" data-tab="social"><i data-lucide="bar-chart-2"></i> Statistik</button>
+          <button class="tab" data-tab="audience"><i data-lucide="users"></i> Audiens</button>
+          <button class="tab" data-tab="brands"><i data-lucide="award"></i> Brand</button>
+          <button class="tab" data-tab="videos"><i data-lucide="video"></i> Video</button>
+          <button class="tab" data-tab="rates"><i data-lucide="dollar-sign"></i> Rate Card</button>
+          <button class="tab" data-tab="invoices"><i data-lucide="file-text"></i> Invoice</button>
         </div>
 
         <div class="modal-body">
@@ -858,6 +884,10 @@
             <div class="field">
               <label>Bio Singkat</label>
               <textarea id="edit-bio" class="edit-input" rows="3"></textarea>
+            </div>
+            <div class="field">
+              <label>Alamat Email Creator</label>
+              <input id="edit-email" class="edit-input" type="email" placeholder="nama@email.com">
             </div>
             <div class="field">
               <label>Nomor WhatsApp (Contoh: 6281234567890)</label>
@@ -978,27 +1008,9 @@
             </div>
             <div id="invoice-list"></div>
           </div>
-
-          <!-- TAB KONEKSI API GAS -->
-          <div class="tab-pane" data-pane="gas-api">
-            <div class="editor-card" style="background:#fff;padding:16px">
-              <strong style="display:block;font-size:13.5px;color:var(--sage);margin-bottom:6px">🔗 URL Google Apps Script Web App</strong>
-              <p style="font-size:11.5px;color:var(--muted);margin-bottom:12px;line-height:1.6">
-                Masukkan URL Web App GAS Anda (berakhiran <code>/exec</code>) agar data tersinkronisasi secara otomatis saat di-hosting di Netlify, GitHub Pages, atau Vercel.
-              </p>
-              <div class="field">
-                <label>Web App URL</label>
-                <input id="edit-gas-url" class="edit-input" placeholder="https://script.google.com/macros/s/AKfycb.../exec">
-              </div>
-              <div style="display:flex;gap:8px">
-                <button type="button" class="pill-btn primary" id="save-gas-url-btn"><i data-lucide="check"></i> Simpan URL API</button>
-                <button type="button" class="pill-btn" id="test-gas-url-btn"><i data-lucide="zap"></i> Tes Koneksi</button>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <div style="padding:16px 22px;border-top:1px solid var(--border);background:#fafafa">
+        <div class="admin-footer">
           <button id="save-btn" class="pill-btn primary" type="button" data-action="save" style="width:100%;padding:13px;font-size:13.5px">
             <i data-lucide="save"></i> Simpan Seluruh Perubahan ke Google Apps Script
           </button>
@@ -1025,10 +1037,18 @@
   <script>
     'use strict';
 
-    /* ── Konfigurasi Google Apps Script URL ── */
+    /* ==========================================================================
+       1. KONFIGURASI GOOGLE APPS SCRIPT WEB APP URL
+       MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI BAWAH INI:
+       (Ganti string di dalam tanda kutip dengan URL Web App Apps Script Anda, pastikan berakhiran /exec)
+       ========================================================================== */
     var GAS_API_URL = 'https://script.google.com/macros/s/AKfycbwbuEykdAqOsA4jgQXK-BtvMF-GJQWaBp52-DbBjzGINY9xy24xyQWA1mxU1LM_dKHq_w/exec';
 
     function getGasApiUrl() {
+      // Menggunakan URL yang dikonfigurasi pada kode di atas
+      if (GAS_API_URL && GAS_API_URL.indexOf('https://script.google.com') === 0 && GAS_API_URL.indexOf('MASUKKAN_URL') === -1) {
+        return GAS_API_URL.trim();
+      }
       try {
         var stored = localStorage.getItem('PORTFOLIO_GAS_API_URL');
         if (stored && stored.indexOf('https://script.google.com') === 0) return stored.trim();
@@ -1335,6 +1355,7 @@
           $('pin-screen').style.display = 'none';
           $('admin-screen').style.display = 'flex';
           fillEditors();
+          icons();
           toast('Berhasil masuk mode edit admin.', 'success');
         } else {
           $('pin-error').textContent = (r && r.message) || 'PIN salah. Silakan coba lagi.';
@@ -1353,10 +1374,10 @@
       $('edit-tagline').value = p.tagline || '';
       $('edit-avatar').value = p.avatarUrl || '';
       $('edit-bio').value = p.bio || '';
+      if ($('edit-email')) $('edit-email').value = p.email || '';
       $('edit-whatsapp').value = appData.whatsappNumber || '';
       $('edit-location').value = p.location || '';
       $('edit-pin').value = '';
-      if ($('edit-gas-url')) $('edit-gas-url').value = getGasApiUrl();
 
       renderAllSubEditors();
       fillInvoicePaket();
@@ -1617,10 +1638,15 @@
       p.avatarUrl = $('edit-avatar').value.trim();
       p.bio = $('edit-bio').value.trim();
       p.location = $('edit-location').value.trim();
+      if ($('edit-email')) p.email = $('edit-email').value.trim();
       appData.profile = p;
       appData.whatsappNumber = $('edit-whatsapp').value.trim();
       var pin = $('edit-pin').value.trim();
       if (pin) appData.adminPin = pin;
+
+      // 1. Tampilkan dan simpan secara instan ke UI & Local Storage
+      render(appData);
+      cacheWrite(appData);
 
       var btn = $('save-btn');
       btn.disabled = true;
@@ -1632,19 +1658,19 @@
         icons();
 
         if (r && r.success) {
-          toast('Data berhasil disimpan ke Google Apps Script!', 'success');
+          toast('✓ Data berhasil disimpan dan langsung diperbarui!', 'success');
           var fresh = r.data || appData;
           render(fresh);
           cacheWrite(fresh);
           $('admin-modal').classList.remove('open');
         } else {
-          toast((r && r.message) || 'Gagal menyimpan data.', 'error');
+          toast((r && r.message) || 'Perubahan tersimpan lokal, gagal sinkron ke GAS.', 'error');
         }
       }, function(err){
         btn.disabled = false;
         btn.innerHTML = '<i data-lucide="save"></i> Simpan Seluruh Perubahan ke Google Apps Script';
         icons();
-        toast('Gagal menyimpan: ' + err.message, 'error');
+        toast('Perubahan aktif di halaman. (Koneksi GAS: ' + (err.message || 'offline') + ')', 'error');
       });
     }
 
@@ -1857,6 +1883,7 @@
         tab.classList.add('active');
         var pane = document.querySelector('[data-pane="' + tab.getAttribute('data-tab') + '"]');
         if (pane) pane.classList.add('active');
+        icons();
       }
 
       var add = e.target.closest('[data-add]');
@@ -1902,30 +1929,6 @@
         if (targetEl) targetEl.scrollBy({ left: dir * 420, behavior: 'smooth' });
       }
     });
-
-    if ($('save-gas-url-btn')) {
-      $('save-gas-url-btn').addEventListener('click', function(){
-        var u = $('edit-gas-url').value.trim();
-        if (u) {
-          localStorage.setItem('PORTFOLIO_GAS_API_URL', u);
-          toast('URL Google Apps Script berhasil disimpan!', 'success');
-        }
-      });
-    }
-
-    if ($('test-gas-url-btn')) {
-      $('test-gas-url-btn').addEventListener('click', function(){
-        var btn = this;
-        btn.textContent = 'Mengecek...';
-        server('getData', [], function(res){
-          btn.textContent = 'Tes Koneksi';
-          if (res) toast('✓ Terhubung ke Google Apps Script!', 'success');
-        }, function(err){
-          btn.textContent = 'Tes Koneksi';
-          toast('Koneksi gagal: ' + err.message, 'error');
-        });
-      });
-    }
 
     if ($('inv-save-btn')) $('inv-save-btn').addEventListener('click', saveInvoice);
     if ($('inv-refresh-btn')) $('inv-refresh-btn').addEventListener('click', loadInvoices);
