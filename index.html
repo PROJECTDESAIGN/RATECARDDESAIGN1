@@ -864,15 +864,36 @@
           <i data-lucide="lock" style="width:32px;height:32px"></i>
         </div>
         <h3 style="color:var(--ink);margin-bottom:6px">Masukkan PIN Admin</h3>
-        <p id="pin-hint" style="font-size:12.5px;color:var(--light);max-width:320px;margin:0 auto">
+        <p id="pin-hint" style="font-size:12.5px;color:var(--light);max-width:340px;margin:0 auto">
           PIN diverifikasi langsung ke Google Apps Script backend.
         </p>
         <input id="pin-input" class="edit-input" type="password" maxlength="32" placeholder="••••">
         <br>
-        <button class="pill-btn primary" type="button" data-action="verify-pin" style="min-width:180px">
-          Masuk Mode Edit
+        <button id="verify-pin-btn" class="pill-btn primary" type="button" data-action="verify-pin" style="min-width:180px">
+          <i data-lucide="key"></i> Masuk Mode Edit
         </button>
-        <p id="pin-error" class="hidden" style="color:var(--danger);font-size:12px;margin-top:10px;font-weight:700"></p>
+        <p id="pin-error" class="hidden" style="color:var(--danger);font-size:12px;margin-top:10px;font-weight:700;line-height:1.4"></p>
+
+        <!-- PENGATURAN URL GAS KHUSUS GITHUB PAGES / CLOUDFLARE PAGES -->
+        <div style="margin-top:16px;padding:10px 14px;background:var(--cream-2);border-radius:12px;border:1px dashed var(--border);text-align:left;max-width:380px;margin-left:auto;margin-right:auto">
+          <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="toggleGasConfig()">
+            <span style="font-size:11.5px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:6px">
+              <i data-lucide="globe" style="width:14px;height:14px"></i> Pengaturan URL Web App GAS
+            </span>
+            <span id="gas-toggle-icon" style="font-size:11px;color:var(--light)">▼</span>
+          </div>
+          <div id="gas-config-body" style="margin-top:10px;display:none">
+            <p style="font-size:11px;color:var(--muted);line-height:1.4;margin-bottom:6px">
+              Jika di-hosting di <strong>GitHub Pages / Cloudflare Pages</strong>, masukkan URL Web App Google Apps Script Anda (akhiran <code>/exec</code>):
+            </p>
+            <input id="gas-url-input" class="edit-input" placeholder="https://script.google.com/macros/s/.../exec" style="font-size:11.5px;padding:8px 10px">
+            <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+              <button type="button" class="pill-btn sm primary" onclick="saveGasUrlFromInput()"><i data-lucide="save"></i> Simpan URL</button>
+              <button type="button" class="pill-btn sm" onclick="testGasUrlConnection()"><i data-lucide="activity"></i> Uji Koneksi</button>
+            </div>
+            <div id="gas-url-status" style="font-size:11px;margin-top:6px;display:none;font-weight:600;padding:4px 8px;border-radius:6px"></div>
+          </div>
+        </div>
       </div>
 
       <!-- MAIN ADMIN SCREEN -->
@@ -886,6 +907,7 @@
           <button class="tab" data-tab="videos"><i data-lucide="video"></i> Video</button>
           <button class="tab" data-tab="rates"><i data-lucide="dollar-sign"></i> Rate Card</button>
           <button class="tab" data-tab="invoices"><i data-lucide="file-text"></i> Invoice</button>
+          <button class="tab" data-tab="settings"><i data-lucide="globe"></i> API GAS</button>
         </div>
 
         <div class="modal-body">
@@ -1031,6 +1053,40 @@
             </div>
             <div id="invoice-list"></div>
           </div>
+
+          <!-- TAB SETTINGS / API GAS -->
+          <div class="tab-pane" data-pane="settings">
+            <div class="editor-card" style="background:#fff;padding:16px;margin-bottom:16px">
+              <strong style="display:block;font-size:13px;margin-bottom:8px;text-transform:uppercase;color:var(--sage);letter-spacing:.04em">
+                🌐 Konfigurasi Integrasi Google Apps Script
+              </strong>
+              <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">
+                Pastikan Google Apps Script telah di-deploy sebagai Web App dengan pengaturan:
+                <br>• <strong>Execute as:</strong> <code>Me (akun Anda)</code>
+                <br>• <strong>Who has access:</strong> <code>Anyone</code>
+              </p>
+              <div class="field">
+                <label>URL Web App Google Apps Script (/exec)</label>
+                <input id="admin-gas-url" class="edit-input" placeholder="https://script.google.com/macros/s/.../exec">
+              </div>
+              <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+                <button type="button" class="pill-btn sm primary" onclick="saveAdminGasUrl()"><i data-lucide="save"></i> Simpan URL</button>
+                <button type="button" class="pill-btn sm" onclick="testAdminGasConnection()"><i data-lucide="activity"></i> Uji Koneksi</button>
+                <button type="button" class="pill-btn sm" onclick="syncDatabaseFromAdmin()"><i data-lucide="database"></i> Sinkronkan Database Sheet</button>
+              </div>
+              <div id="admin-gas-status" style="font-size:11.5px;margin-top:8px;display:none;font-weight:600;padding:6px 10px;border-radius:8px"></div>
+            </div>
+
+            <div class="editor-card" style="background:#fff;padding:16px">
+              <strong style="display:block;font-size:13px;margin-bottom:8px;text-transform:uppercase;color:var(--danger);letter-spacing:.04em">
+                ⚠️ Reset Data Portfolio
+              </strong>
+              <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">
+                Mengembalikan seluruh data profil, video, rate card, dan statistik ke data awal default.
+              </p>
+              <button type="button" class="pill-btn sm" style="color:var(--danger);border-color:var(--danger)" onclick="confirmResetData()"><i data-lucide="refresh-ccw"></i> Reset Seluruh Data ke Default</button>
+            </div>
+          </div>
         </div>
 
         <div class="admin-footer">
@@ -1068,15 +1124,149 @@
     var GAS_API_URL = 'https://script.google.com/macros/s/AKfycbxXnSfixScoofZkrbRibQhVuN9iIU3VJrdedAUFI3De/dev';
 
     function getGasApiUrl() {
-      // Menggunakan URL yang dikonfigurasi pada kode di atas
-      if (GAS_API_URL && GAS_API_URL.indexOf('https://script.google.com') === 0 && GAS_API_URL.indexOf('MASUKKAN_URL') === -1) {
-        return GAS_API_URL.trim();
-      }
       try {
         var stored = localStorage.getItem('PORTFOLIO_GAS_API_URL');
         if (stored && stored.indexOf('https://script.google.com') === 0) return stored.trim();
       } catch(e){}
-      return GAS_API_URL;
+      if (GAS_API_URL && GAS_API_URL.indexOf('https://script.google.com') === 0 && GAS_API_URL.indexOf('MASUKKAN_URL') === -1) {
+        return GAS_API_URL.trim();
+      }
+      return (GAS_API_URL || '').trim();
+    }
+
+    function saveGasUrl(url) {
+      if (!url || typeof url !== 'string') return;
+      var clean = url.trim();
+      try {
+        localStorage.setItem('PORTFOLIO_GAS_API_URL', clean);
+      } catch(e){}
+      if ($('gas-url-input')) $('gas-url-input').value = clean;
+      if ($('admin-gas-url')) $('admin-gas-url').value = clean;
+    }
+
+    function toggleGasConfig() {
+      var body = $('gas-config-body');
+      var icon = $('gas-toggle-icon');
+      if (!body) return;
+      if (body.style.display === 'none' || !body.style.display) {
+        body.style.display = 'block';
+        if (icon) icon.textContent = '▲';
+        if ($('gas-url-input')) $('gas-url-input').value = getGasApiUrl();
+      } else {
+        body.style.display = 'none';
+        if (icon) icon.textContent = '▼';
+      }
+    }
+
+    function saveGasUrlFromInput() {
+      var input = $('gas-url-input');
+      var status = $('gas-url-status');
+      if (!input) return;
+      var val = input.value.trim();
+      if (!val || val.indexOf('https://script.google.com') !== 0) {
+        toast('Masukkan URL Google Apps Script yang valid (diawali https://script.google.com)', 'error');
+        if (status) {
+          status.style.display = 'block';
+          status.style.background = '#fee2e2';
+          status.style.color = '#991b1b';
+          status.textContent = '✗ URL tidak valid. Harus diawali https://script.google.com';
+        }
+        return;
+      }
+      saveGasUrl(val);
+      testGasUrlConnection();
+    }
+
+    function testGasUrlConnection() {
+      var status = $('gas-url-status');
+      if (status) {
+        status.style.display = 'block';
+        status.style.background = '#fef3c7';
+        status.style.color = '#92400e';
+        status.textContent = 'Menguji koneksi ke Google Apps Script...';
+      }
+      server('ping', [], function(r){
+        if (status) {
+          status.style.background = '#dcfce7';
+          status.style.color = '#166534';
+          status.textContent = '✓ Terhubung! ' + ((r && r.message) || 'Web App siap digunakan.');
+        }
+        toast('✓ Berhasil terhubung ke Google Apps Script Web App!', 'success');
+      }, function(err){
+        if (status) {
+          status.style.background = '#fee2e2';
+          status.style.color = '#991b1b';
+          status.textContent = '✗ Gagal: ' + (err.message || err);
+        }
+        toast('Gagal terhubung ke GAS. Pastikan Web App di-deploy dengan akses "Anyone".', 'error');
+      });
+    }
+
+    function saveAdminGasUrl() {
+      var input = $('admin-gas-url');
+      if (!input) return;
+      var val = input.value.trim();
+      if (!val || val.indexOf('https://script.google.com') !== 0) {
+        toast('URL Google Apps Script tidak valid.', 'error');
+        return;
+      }
+      saveGasUrl(val);
+      testAdminGasConnection();
+    }
+
+    function testAdminGasConnection() {
+      var status = $('admin-gas-status');
+      if (status) {
+        status.style.display = 'block';
+        status.style.background = '#fef3c7';
+        status.style.color = '#92400e';
+        status.textContent = 'Menguji koneksi ke Google Apps Script...';
+      }
+      server('ping', [], function(r){
+        if (status) {
+          status.style.background = '#dcfce7';
+          status.style.color = '#166534';
+          status.textContent = '✓ Terhubung! ' + ((r && r.message) || 'Google Apps Script Web App siap.');
+        }
+        toast('✓ Koneksi ke Google Apps Script berhasil!', 'success');
+      }, function(err){
+        if (status) {
+          status.style.background = '#fee2e2';
+          status.style.color = '#991b1b';
+          status.textContent = '✗ Gagal: ' + (err.message || err);
+        }
+        toast('Koneksi gagal. Periksa izin deploy Web App.', 'error');
+      });
+    }
+
+    function syncDatabaseFromAdmin() {
+      toast('Menyinkronkan database spreadsheet...');
+      server('initDatabase', [adminSessionToken], function(r){
+        if (r && r.success) {
+          toast('✓ Database Spreadsheet berhasil diinisialisasi!', 'success');
+        } else {
+          toast('Sinkronisasi selesai.');
+        }
+      }, function(err){
+        toast('Gagal sinkron database: ' + (err.message || err), 'error');
+      });
+    }
+
+    function confirmResetData() {
+      if (!confirm('Yakin ingin mereset seluruh data portfolio ke konfigurasi awal?')) return;
+      server('resetData', [adminSessionToken], function(r){
+        if (r && r.success) {
+          toast('✓ Data berhasil direset ke default.', 'success');
+          appData = defaults();
+          render(appData);
+          fillEditors();
+          cacheWrite(appData);
+        } else {
+          toast((r && r.message) || 'Gagal mereset data.', 'error');
+        }
+      }, function(err){
+        toast('Gagal reset data: ' + (err.message || err), 'error');
+      });
     }
 
     var appData = {};
@@ -1107,7 +1297,51 @@
       setTimeout(function(){ if (el.parentNode) el.remove(); }, 4000);
     }
 
-    /* ── Komunikasi Universal ke Google Apps Script (GAS & REST / JSONP) ── */
+    /* ── JSONP Client Transport (100% Bebas CORS di GitHub Pages / Cloudflare Pages) ── */
+    function jsonp(url, params, success, failure, timeoutMs) {
+      timeoutMs = timeoutMs || 12000;
+      var callbackName = 'gas_cb_' + Date.now() + '_' + Math.floor(Math.random() * 1000000);
+      var script = document.createElement('script');
+      var cleanedUp = false;
+
+      function cleanup() {
+        if (cleanedUp) return;
+        cleanedUp = true;
+        clearTimeout(timer);
+        try { delete window[callbackName]; } catch(e){ window[callbackName] = undefined; }
+        if (script.parentNode) script.parentNode.removeChild(script);
+      }
+
+      var timer = setTimeout(function(){
+        cleanup();
+        if (failure) failure(new Error('Koneksi timeout (12s). Pastikan Web App Google Apps Script di-deploy dengan akses "Anyone".'));
+      }, timeoutMs);
+
+      window[callbackName] = function(res) {
+        cleanup();
+        if (success) success(res);
+      };
+
+      script.onerror = function() {
+        cleanup();
+        if (failure) failure(new Error('Gagal memuat respons dari Google Apps Script.'));
+      };
+
+      var query = [];
+      for (var k in params) {
+        if (params.hasOwnProperty(k) && params[k] !== undefined && params[k] !== null) {
+          query.push(encodeURIComponent(k) + '=' + encodeURIComponent(params[k]));
+        }
+      }
+      query.push('callback=' + callbackName);
+      query.push('t=' + Date.now());
+
+      var sep = url.indexOf('?') === -1 ? '?' : '&';
+      script.src = url + sep + query.join('&');
+      document.head.appendChild(script);
+    }
+
+    /* ── Komunikasi Universal ke Google Apps Script (GAS, JSONP & Fetch) ── */
     function server(method, args, success, failure) {
       args = args || [];
 
@@ -1118,7 +1352,7 @@
         }).withFailureHandler(function(err){
           console.error('GAS Error:', err);
           if (failure) failure(err);
-          else toast('Error server GAS: ' + err, 'error');
+          else toast('Error server GAS: ' + (err.message || err), 'error');
         });
         if (typeof runner[method] === 'function') {
           runner[method].apply(runner, args);
@@ -1126,82 +1360,93 @@
         }
       }
 
-      // 2. External Hosting (Netlify / GitHub Pages / Vercel)
+      // 2. External Hosting (GitHub Pages / Cloudflare Pages / Vercel / Netlify)
       var apiUrl = getGasApiUrl();
-      if (!apiUrl || apiUrl.indexOf('http') !== 0 || apiUrl === 'URL_WEB_APP_GOOGLE_APPS_SCRIPT') {
-        if (failure) failure(new Error('URL Google Apps Script belum dikonfigurasi. Masukkan di tab API GAS.'));
+      if (!apiUrl || apiUrl.indexOf('https://script.google.com') !== 0 || apiUrl.indexOf('MASUKKAN_URL') !== -1) {
+        var msg = 'URL Google Apps Script belum dikonfigurasi. Masukkan URL Web App pada pengaturan di bawah.';
+        if (failure) failure(new Error(msg));
+        else toast(msg, 'error');
+        var configBody = $('gas-config-body');
+        if (configBody) configBody.style.display = 'block';
         return;
       }
 
-      // JSONP untuk GET agar bebas dari CORS issue
-      if (method === 'getData') {
-        var callbackName = 'gas_cb_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
-        var script = document.createElement('script');
-        var timer = setTimeout(function(){
-          if (window[callbackName]) {
-            delete window[callbackName];
-            if (script.parentNode) script.parentNode.removeChild(script);
-            fetchPostData();
-          }
-        }, 6000);
+      // Method yang dapat dipanggil via JSONP (Bebas CORS di hosting statis)
+      var jsonpMethods = ['getData', 'verifyAdminPin', 'verifyPin', 'getInvoices', 'deleteInvoice', 'detectVideo', 'resetData', 'initDatabase', 'ping'];
 
-        window[callbackName] = function(res) {
-          clearTimeout(timer);
-          delete window[callbackName];
-          if (script.parentNode) script.parentNode.removeChild(script);
-          if (res && res.data) success(res.data);
-          else if (res) success(res);
-          else if (failure) failure(new Error('Data kosong'));
-        };
-
-        var sep = apiUrl.indexOf('?') === -1 ? '?' : '&';
-        script.src = apiUrl + sep + 'action=getData&callback=' + callbackName + '&t=' + Date.now();
-        script.onerror = function() {
-          clearTimeout(timer);
-          delete window[callbackName];
-          if (script.parentNode) script.parentNode.removeChild(script);
-          fetchPostData();
-        };
-        document.body.appendChild(script);
-
-        function fetchPostData() {
-          fetch(apiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ action: 'getData' })
-          })
-          .then(function(r){ return r.json(); })
-          .then(function(j){ if (success) success(j.data || j); })
-          .catch(function(e){ if (failure) failure(e); });
+      if (jsonpMethods.indexOf(method) !== -1) {
+        var params = { action: method };
+        if (method === 'verifyAdminPin' || method === 'verifyPin') {
+          params.pin = args[0] || '';
+        } else if (method === 'getInvoices') {
+          params.token = args[0] || '';
+        } else if (method === 'deleteInvoice') {
+          params.id = args[0] || '';
+          params.token = args[1] || '';
+        } else if (method === 'detectVideo') {
+          params.url = args[0] || '';
+        } else if (method === 'resetData' || method === 'initDatabase') {
+          params.token = args[0] || '';
         }
+
+        jsonp(apiUrl, params, function(res){
+          if (method === 'getData') {
+            if (res && res.data) { if (success) success(res.data); }
+            else if (res) { if (success) success(res); }
+            else { if (failure) failure(new Error('Data kosong')); }
+          } else {
+            if (success) success(res);
+          }
+        }, function(err){
+          // Fallback to fetch POST jika JSONP timeout/gagal
+          fetchPostFallback();
+        });
         return;
       }
 
-      // POST Request untuk semua action lain
-      var payload = { action: method, args: args };
-      if (method === 'verifyAdminPin' || method === 'verifyPin') payload.pin = args[0];
-      if (method === 'saveData') { payload.data = args[0]; payload.token = args[1]; }
-      if (method === 'uploadAsset') { payload.dataUri = args[0]; payload.fileName = args[1]; payload.mimeType = args[2]; payload.token = args[3]; payload.durationSeconds = args[4]; }
-      if (method === 'submitInquiry') payload.formData = args[0];
-      if (method === 'getInvoices') payload.token = args[0];
-      if (method === 'saveInvoice') { payload.invoiceData = args[0]; payload.token = args[1]; }
-      if (method === 'deleteInvoice') { payload.id = args[0]; payload.token = args[1]; }
-      if (method === 'generateInvoicePdf') { payload.id = args[0]; payload.token = args[1]; payload.signatureDataUrl = args[2]; }
-      if (method === 'detectVideo') payload.url = args[0];
-      if (method === 'resetData') payload.token = args[0];
+      // POST Request untuk method penulisan data (saveData, uploadAsset, submitInquiry, saveInvoice, generateInvoicePdf)
+      fetchPostFallback();
 
-      fetch(apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
-      })
-      .then(function(res){ return res.json(); })
-      .then(function(json){ if (success) success(json); })
-      .catch(function(err){
-        console.error('Fetch error:', err);
-        if (failure) failure(err);
-        else toast('Gagal terhubung ke Google Apps Script.', 'error');
-      });
+      function fetchPostFallback() {
+        var payload = { action: method, args: args };
+        if (method === 'verifyAdminPin' || method === 'verifyPin') payload.pin = args[0];
+        if (method === 'saveData') { payload.data = args[0]; payload.token = args[1]; }
+        if (method === 'uploadAsset') { payload.dataUri = args[0]; payload.fileName = args[1]; payload.mimeType = args[2]; payload.token = args[3]; payload.durationSeconds = args[4]; }
+        if (method === 'submitInquiry') payload.formData = args[0];
+        if (method === 'getInvoices') payload.token = args[0];
+        if (method === 'saveInvoice') { payload.invoiceData = args[0]; payload.token = args[1]; }
+        if (method === 'deleteInvoice') { payload.id = args[0]; payload.token = args[1]; }
+        if (method === 'generateInvoicePdf') { payload.id = args[0]; payload.token = args[1]; payload.signatureDataUrl = args[2]; }
+        if (method === 'detectVideo') payload.url = args[0];
+        if (method === 'resetData') payload.token = args[0];
+        if (method === 'initDatabase') payload.token = args[0];
+
+        fetch(apiUrl, {
+          method: 'POST',
+          mode: 'cors',
+          redirect: 'follow',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+          },
+          body: JSON.stringify(payload)
+        })
+        .then(function(res){
+          return res.json();
+        })
+        .then(function(json){
+          if (method === 'getData') {
+            if (success) success(json.data || json);
+          } else {
+            if (success) success(json);
+          }
+        })
+        .catch(function(err){
+          console.error('Fetch POST error:', err);
+          var friendlyMsg = 'Gagal terhubung ke Google Apps Script. Pastikan Web App di-deploy sebagai "Web app" dengan opsi "Who has access: Anyone".';
+          if (failure) failure(new Error(friendlyMsg));
+          else toast(friendlyMsg, 'error');
+        });
+      }
     }
 
     /* ── Default Data Fallback ── */
@@ -1372,7 +1617,19 @@
       if (!pin) { toast('Masukkan PIN admin.', 'error'); return; }
       $('pin-error').className = 'hidden';
 
+      var btn = $('verify-pin-btn');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i data-lucide="loader" class="spin"></i> Memverifikasi...';
+        icons();
+      }
+
       server('verifyAdminPin', [pin], function(r){
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<i data-lucide="key"></i> Masuk Mode Edit';
+          icons();
+        }
         if (r && r.success) {
           adminSessionToken = r.token;
           $('pin-screen').style.display = 'none';
@@ -1381,12 +1638,23 @@
           icons();
           toast('Berhasil masuk mode edit admin.', 'success');
         } else {
-          $('pin-error').textContent = (r && r.message) || 'PIN salah. Silakan coba lagi.';
+          var failMsg = (r && r.message) || 'PIN salah. Silakan coba lagi.';
+          $('pin-error').textContent = failMsg;
           $('pin-error').className = '';
+          toast(failMsg, 'error');
         }
       }, function(err){
-        $('pin-error').textContent = 'Gagal verifikasi: ' + (err.message || err);
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<i data-lucide="key"></i> Masuk Mode Edit';
+          icons();
+        }
+        var errText = err.message || err;
+        $('pin-error').innerHTML = '<strong>Gagal verifikasi:</strong> ' + errText +
+          '<br><span style="font-size:11px;font-weight:normal;opacity:0.9">💡 Pastikan URL Web App Google Apps Script sudah benar & di-deploy sebagai "Web app" dengan akses "Anyone". Buka Pengaturan URL di bawah.</span>';
         $('pin-error').className = '';
+        var cfg = $('gas-config-body');
+        if (cfg) cfg.style.display = 'block';
       });
     }
 
@@ -1401,6 +1669,7 @@
       $('edit-whatsapp').value = appData.whatsappNumber || '';
       $('edit-location').value = p.location || '';
       $('edit-pin').value = '';
+      if ($('admin-gas-url')) $('admin-gas-url').value = getGasApiUrl();
 
       renderAllSubEditors();
       fillInvoicePaket();
@@ -1992,11 +2261,26 @@
       r.readAsDataURL(f);
     });
 
+    if ($('pin-input')) {
+      $('pin-input').addEventListener('keyup', function(e){
+        if (e.key === 'Enter') verifyPin();
+      });
+    }
+
+    if ($('gas-url-input')) {
+      $('gas-url-input').addEventListener('keyup', function(e){
+        if (e.key === 'Enter') saveGasUrlFromInput();
+      });
+    }
+
     /* ── Inisialisasi Halaman (GAS Prioritas Utama) ── */
     window.addEventListener('load', function(){
       // 1. Tampilkan cache lokal jika ada agar halaman tidak kosong
       var cached = cacheRead();
       if (cached) render(cached);
+
+      // Inisialisasi input URL jika tersimpan
+      if ($('gas-url-input')) $('gas-url-input').value = getGasApiUrl();
 
       // 2. Ambil data terbaru langsung dari Google Apps Script
       server('getData', [], function(fresh){
